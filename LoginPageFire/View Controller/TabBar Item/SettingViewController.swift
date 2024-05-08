@@ -46,29 +46,6 @@ class SettingViewController: UIViewController, UIImagePickerControllerDelegate, 
             }
         }
     }
-    
-    @IBAction func uploadButtonOutlet(_ sender: Any) {
-        alert()
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        imageViewOutlet.image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-        dismiss(animated: true)
-    }
-    
-    func alert() {
-        let a = UIAlertController(title: "Secelct Photo", message: "", preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Camera", style: .default))
-        a.addAction(UIAlertAction(title: "Gallery", style: .default,handler: { _ in
-            let a = UIImagePickerController()
-            a.sourceType = .photoLibrary
-            a.delegate = self
-            a.allowsEditing = true
-            self.present(a, animated: true)
-        }))
-        a.addAction(UIAlertAction(title: "Cansel", style: .destructive))
-        present(a, animated: true)
-    }
 }
 
 //MARK: Alert Func.
