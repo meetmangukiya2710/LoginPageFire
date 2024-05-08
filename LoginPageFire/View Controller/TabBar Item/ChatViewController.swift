@@ -8,23 +8,18 @@
 import UIKit
 import FirebaseFirestoreInternal
 
-struct ChatTread {
-    var UID: uid
+struct ChatThread {
+    var UID: [String]
     var threadUid: String
+    var userName: String
 }
 
-struct uid {
-    var name: String
-    var userUID: String
-}
-
-class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ChatViewController: UIViewController {
     
     @IBOutlet weak var userTableView: UITableView!
     
     let db = Firestore.firestore()
-    var userArray = [ChatTread]()
-    var removeData = ""
+    var userArray = [ChatThread]()
     var temp = 0
     
     override func viewDidLoad() {
@@ -33,81 +28,46 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         getData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     func getData() {
-        Task { @MainActor in
-            db.collection("Thread").addSnapshotListener { [self] snapshot, error in
-                if let error = error {
-                    print("Error fetching documents: \(error)")
-                    return
-                }
-                
-                if let snapshot = snapshot {
-                    var namesSet = Set<String>() // Create a set to store unique names
-                    
-                    userArray = snapshot.documents.compactMap { document in
-                        guard let user = document["User"] as? [String],
-                              let userUID = user.first, // Assuming you want the last element of the array
-                              let name = user.last, // Assuming you want the first element of the array
-                              let threadUID = document["ThreadUID"] as? String
-                        else {
-                            return nil
-                        }
-                        
-                        if namesSet.contains(name) {
-                            // Name already exists, do something if needed
-                            // For now, let's print a message
-                            print("\(name) is repeated")
-                        } else {
-                            // Name is unique, add it to the set and return ChatTread
-                            namesSet.insert(name)
-                            return ChatTread(UID: uid(name: name, userUID: userUID), threadUid: threadUID)
-                        }
-                        return nil // Return nil for duplicate names
+        db.collection("DidSelectUser").addSnapshotListener{ [self] snapshot, error  in
+            if error == nil{
+                if let snapshot = snapshot{
+                    userArray = snapshot.documents.map{ i in
+                        return ChatThread(UID: i["User"] as? [String] ?? ["nil"], threadUid: i["ThreadUID"] as? String ?? "",userName: i["UserName"] as? String ?? "")
                     }
+                    print(userArray)
+                    userTableView.reloadData()
                 }
-                print(userArray)
-                userTableView.reloadData()
             }
         }
     }
-    
+}
+
+extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = userTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatPageTableViewCell
-        
-        DispatchQueue.main.async { [self] in
-            let userString = userArray[indexPath.row].UID.name
-            cell.userNameLableOutlet.text = userString
-        }
-        
+        cell.userNameLableOutlet.text = userArray[indexPath.row].userName
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 94
+        return 122
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let select = storyboard?.instantiateViewController(identifier: "ChattingPageViewController") as! ChattingPageViewController
-        select.namelabel = userArray[indexPath.row].UID.name // or userArray[indexPath.row].uid.description to show the array
+        select.namelabel = userArray[indexPath.row].userName
         select.threadID = userArray[indexPath.row].threadUid
         navigationController?.pushViewController(select, animated: true)
     }
     
-//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-//        return .delete
-//    }
-    
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            tableView.beginUpdates()
-//            let removedChatTread = userArray.remove(at: indexPath.row)
-//            removeData = removedChatTread.threadUid // Assign the threadUid to removeData
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//            tableView.endUpdates()
-//        }
-//    }
 }

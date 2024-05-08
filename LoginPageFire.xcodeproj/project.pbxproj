@@ -26,7 +26,6 @@
 		BA8F7DEE2BCE944E00404265 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F7DED2BCE944E00404265 /* LoginViewController.swift */; };
 		BA9275FC2BE218A100123C53 /* UserChatPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9275FB2BE218A100123C53 /* UserChatPageTableViewCell.swift */; };
 		BA9276272BE23C6F00123C53 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA9276262BE23C6F00123C53 /* GoogleService-Info.plist */; };
-		BAB869892BE0D7C700A825FD /* dsfgfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB869882BE0D7C700A825FD /* dsfgfViewController.swift */; };
 		BAE175312BD767CB00A18AE4 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE175302BD767CB00A18AE4 /* TabBarViewController.swift */; };
 		BAE175342BD7686700A18AE4 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE175332BD7686700A18AE4 /* ChatViewController.swift */; };
 		BAE175362BD768BA00A18AE4 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE175352BD768BA00A18AE4 /* SettingViewController.swift */; };
@@ -55,7 +54,6 @@
 		BA8F7DED2BCE944E00404265 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		BA9275FB2BE218A100123C53 /* UserChatPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatPageTableViewCell.swift; sourceTree = "<group>"; };
 		BA9276262BE23C6F00123C53 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		BAB869882BE0D7C700A825FD /* dsfgfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dsfgfViewController.swift; sourceTree = "<group>"; };
 		BAE175302BD767CB00A18AE4 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		BAE175332BD7686700A18AE4 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		BAE175352BD768BA00A18AE4 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -148,7 +146,6 @@
 			isa = PBXGroup;
 			children = (
 				BA617AE62BCE423C0069930B /* Main.storyboard */,
-				BAB869882BE0D7C700A825FD /* dsfgfViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -329,7 +326,6 @@
 				BA617AE32BCE423C0069930B /* SceneDelegate.swift in Sources */,
 				BA03E8152BD253EF0086984A /* ConfromEmailPage.swift in Sources */,
 				BAE175312BD767CB00A18AE4 /* TabBarViewController.swift in Sources */,
-				BAB869892BE0D7C700A825FD /* dsfgfViewController.swift in Sources */,
 				BA8F7DEC2BCE944300404265 /* SignUpViewController.swift in Sources */,
 				BAE175362BD768BA00A18AE4 /* SettingViewController.swift in Sources */,
 			);

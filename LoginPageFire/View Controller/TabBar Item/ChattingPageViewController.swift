@@ -42,7 +42,11 @@ class ChattingPageViewController: UIViewController {
         super.viewDidLoad()
         nameLableOutlet.text = namelabel
         getData()
-        navigationItem.hidesBackButton = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     @IBAction func sendButtonAction(_ sender: Any) {
@@ -52,7 +56,7 @@ class ChattingPageViewController: UIViewController {
                    "dataTpye": "Message",
                    "imagePath": ""]
         
-        db.collection("Thread").document(threadID).collection("Chat").addDocument(data: dic) { [self] error in
+        db.collection("DidSelectUser").document(threadID).collection("Chat").addDocument(data: dic) { [self] error in
             if error == nil {
                 chatTextFieldOutlet.text = ""
             }
@@ -60,7 +64,7 @@ class ChattingPageViewController: UIViewController {
     }
     
     func getData() {
-        db.collection("Thread").document(threadID).collection("Chat").order(by: "Time", descending: false).addSnapshotListener { [self] snapShot, error in
+        db.collection("DidSelectUser").document(threadID).collection("Chat").order(by: "Time", descending: false).addSnapshotListener { [self] snapShot, error in
             if let snapshot = snapShot {
                 userArray = snapshot.documents.map { i in ChatData(dic: i) }
                 print(userArray)
@@ -73,7 +77,6 @@ class ChattingPageViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-    
 }
 
 extension ChattingPageViewController : UITableViewDataSource, UITableViewDelegate {
@@ -83,11 +86,8 @@ extension ChattingPageViewController : UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = chatTableViewOutlet.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UserChatPageTableViewCell
-        
         let message = userArray[indexPath.row].message
-            cell.messageLableOutlet.text = message
-
-        
+        cell.messageLableOutlet.text = message
         return cell
     }
     

@@ -7,15 +7,16 @@
 
 import UIKit
 import FirebaseFirestoreInternal
+import FirebaseFirestore
 import FirebaseAuth
 
 struct UserData {
-    var currentUserUID: String
-    var selectUserName: String
-    var selectUserUID: String
+    var UID: String
+    var firstName: String
+    var lastName: String
 }
 
-class AddViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class AddViewController: UIViewController {
     
     @IBOutlet weak var userTableView: UITableView!
     
@@ -32,31 +33,23 @@ class AddViewController: UIViewController, UITableViewDataSource, UITableViewDel
     }
     
     func getData() {
-        Task { @MainActor in
-            
-            let snapshot = try await db.collection("User").getDocuments()
-            for document in snapshot.documents {
-                if let firstName = document.data()["First Name"] as? String,
-                   let lastName = document.data()["Last Name"] as? String {
-                    let fullName = "\(firstName) \(lastName)"
-                    
-                    if userUID == document.documentID {
-                        print("Not Append")
+        db.collection("User").getDocuments{[self] snapshot,error in
+            if error == nil {
+                if let snapshot = snapshot {
+                    userArray = snapshot.documents.map{ i in
+                        return UserData(UID: i["uid"] as! String,firstName: i["First Name"] as! String ,lastName: i["Last Name"] as! String)
                     }
-                    else {
-                        let userData = UserData(currentUserUID: userUID, selectUserName: fullName, selectUserUID: document.documentID)
-                        userArray.append(userData)
-                        userTableView.reloadData()
-                    }
-                } else {
-                    print("Error: Could not retrieve first name and/or last name from document data.")
+                    print(userArray)
+                    userTableView.reloadData()
                 }
+            } else {
+                print(error?.localizedDescription as Any)
             }
         }
     }
 }
 
-extension AddViewController {
+extension AddViewController:  UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userArray.count
     }
@@ -64,7 +57,7 @@ extension AddViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = userTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UserNameTableViewCell
         DispatchQueue.main.async { [self] in
-            cell.userNameLableOutlet.text = userArray[indexPath.row].selectUserName
+            cell.userNameLableOutlet.text = userArray[indexPath.row].firstName + " " + userArray[indexPath.row].lastName
         }
         return cell
     }
@@ -74,12 +67,13 @@ extension AddViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let a = db.collection("Thread").document()
+        let a = db.collection("DidSelectUser").document()
         let dic = [
-            "User": [userArray[indexPath.row].selectUserUID, userUID, userArray[indexPath.row].selectUserName], // Assuming uid is accessible here
-            "ThreadUID": a.documentID
-        ] as [String : Any]
+            "User": [userArray[indexPath.row].UID, userUID],
+            "ThreadUID": a.documentID,
+            "UserName" : userArray[indexPath.row].firstName + " " + userArray[indexPath.row].lastName] as [String : Any]
         a.setData(dic)
         tabBarController?.selectedIndex = 0
     }
 }
+
