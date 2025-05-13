@@ -157,34 +157,26 @@ extension SignUpViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [self] in
             self.activityIndicator.stopAnimating()
             
-            if fstNameLableOutlet.text == "" && lstNameLableOutlet.text == "" && emailLableOutlet.text == "" && phoneNumberLableOutlet.text == "" && passwordLableOutlet.text == "" && confirmPasswordLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the All Detail")
-            }
-            else if fstNameLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the Fst Name")
-            }
-            else if lstNameLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the Lst Name")
-            }
-            else if emailLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the Email")
-            }
-            else if phoneNumberLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the Phone Number")
-            }
-            else if passwordLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the Password")
-            }
-            else if confirmPasswordLableOutlet.text == "" {
-                temp = 1
-                alert(title: "Error!", message: "Enter the Confrim Password")
-            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [self] in
+    self.activityIndicator.stopAnimating()
+    
+    let fields: [(UITextField, String)] = [
+        (fstNameLableOutlet, "First Name"),
+        (lstNameLableOutlet, "Last Name"),
+        (emailLableOutlet, "Email"),
+        (phoneNumberLableOutlet, "Phone Number"),
+        (passwordLableOutlet, "Password"),
+        (confirmPasswordLableOutlet, "Confirm Password")
+    ]
+    
+    for (field, name) in fields {
+        if field.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
+            temp = 1
+            alert(title: "Error!", message: "Enter the \(name)")
+            return
+        }
+    }
+}
         }
     }
 }
